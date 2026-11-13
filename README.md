@@ -1,1 +1,0 @@
-# Indicadores_mantenimiento
