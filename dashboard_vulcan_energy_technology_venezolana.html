@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vulcan Energy Technology Venezolana - Monitoreo de Equipos de Bombeo</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js para visualizaciones exactas y responsivas -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Font Awesome para iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Fuente Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #f4f6f9;
+      color: #1e293b;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+    .card-shadow {
+      box-shadow: 0 2px 10px -2px rgba(15, 23, 42, 0.06), 0 1px 4px -1px rgba(15, 23, 42, 0.04);
+    }
+    /* Estilo sutil para scrollbar de tabla en dispositivos pequeños */
+    .custom-scrollbar::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Barra de Navegación / Encabezado Principal -->
+  <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30 shadow-md">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <!-- Identidad de la Empresa -->
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center shadow-lg shadow-emerald-950/50 shrink-0 border border-emerald-400/30">
+          <i class="fa-solid fa-industry text-white text-lg"></i>
+        </div>
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-white">
+              Vulcan Energy Technology Venezolana
+            </h1>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              Operaciones &amp; Confiabilidad
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">
+            Panel Ejecutivo de Disponibilidad Operativa y Mantenimiento — Sistema de Bombeo
+          </p>
+        </div>
+      </div>
+
+      <!-- Controles de Filtro y Fecha de Corte -->
+      <div class="flex flex-wrap items-center gap-2.5">
+        <div class="flex items-center bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-xs sm:text-sm">
+          <i class="fa-solid fa-filter text-slate-400 mr-2"></i>
+          <label for="pumpTypeFilter" class="text-slate-400 mr-2 hidden sm:inline">Tipo:</label>
+          <select id="pumpTypeFilter" class="bg-transparent text-white font-medium focus:outline-none cursor-pointer">
+            <option value="ALL" class="bg-slate-900 text-white">Todos los Equipos (7)</option>
+            <option value="MPP" class="bg-slate-900 text-white">Bombas MPP (2)</option>
+            <option value="Recip" class="bg-slate-900 text-white">Bombas Reciprocantes (4)</option>
+            <option value="Circular" class="bg-slate-900 text-white">Bomba Circular (1)</option>
+          </select>
+        </div>
+
+        <button id="exportCsvBtn" type="button" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 border border-slate-700 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-medium transition cursor-pointer">
+          <i class="fa-solid fa-file-csv text-emerald-400"></i>
+          <span>Exportar CSV</span>
+        </button>
+
+        <div class="inline-flex items-center gap-2 bg-emerald-950/60 border border-emerald-700/50 text-emerald-300 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-semibold tabular-nums">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Corte: 31/10/2026</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <main class="flex-1 max-w-[1440px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Notificación / Toast (sin alert) -->
+    <div id="toastBanner" class="hidden fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl border border-slate-700 flex items-center gap-3 text-sm transition-all duration-300">
+      <i class="fa-solid fa-circle-check text-emerald-400"></i>
+      <span id="toastMessage">Reporte exportado correctamente.</span>
+    </div>
+
+    <!-- Fila 1: Tarjetas de KPIs Principales -->
+    <section aria-label="Indicadores Clave de Desempeño" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <!-- KPI 1: Disponibilidad Global -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/80 card-shadow flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Disponibilidad Operativa</span>
+          <span class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <i class="fa-solid fa-gauge-high text-base"></i>
+          </span>
+        </div>
+        <div class="mt-3">
+          <div id="kpiAvailability" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">99.50%</div>
+          <p class="text-xs text-emerald-600 font-medium mt-1 flex items-center gap-1">
+            <i class="fa-solid fa-arrow-trend-up"></i>
+            <span>Meta corporativa: &ge; 98.50%</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- KPI 2: Horas Calendario Totales -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/80 card-shadow flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Horas Calendario</span>
+          <span class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+            <i class="fa-regular fa-calendar-check text-base"></i>
+          </span>
+        </div>
+        <div class="mt-3">
+          <div id="kpiTotalCalendar" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">29,614.13 <span class="text-sm font-semibold text-slate-500">h</span></div>
+          <p id="kpiEquipCount" class="text-xs text-slate-500 mt-1">Acumulado en 7 unidades activas</p>
+        </div>
+      </div>
+
+      <!-- KPI 3: Horas Operación Neta -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/80 card-shadow flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Operación Neta</span>
+          <span class="w-9 h-9 rounded-xl bg-green-50 text-green-600 flex items-center justify-center">
+            <i class="fa-solid fa-Circle-Play fa-circle-play text-base"></i>
+          </span>
+        </div>
+        <div class="mt-3">
+          <div id="kpiNetOp" class="text-2xl sm:text-3xl font-extrabold text-green-600 tabular-nums">29,467.31 <span class="text-sm font-semibold text-slate-500">h</span></div>
+          <p id="kpiNetOpPct" class="text-xs text-slate-500 mt-1">99.50% del tiempo calendario</p>
+        </div>
+      </div>
+
+      <!-- KPI 4: Horas Parada por Falla -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/80 card-shadow flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Parada por Falla</span>
+          <span class="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+            <i class="fa-solid fa-triangle-exclamation text-base"></i>
+          </span>
+        </div>
+        <div class="mt-3">
+          <div id="kpiFailure" class="text-2xl sm:text-3xl font-extrabold text-rose-600 tabular-nums">90.82 <span class="text-sm font-semibold text-slate-500">h</span></div>
+          <p id="kpiFailurePct" class="text-xs text-rose-600/80 font-medium mt-1">0.31% indisponibilidad no planificada</p>
+        </div>
+      </div>
+
+      <!-- KPI 5: Horas Parada Mantenimiento -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200/80 card-shadow flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Parada Mantenimiento</span>
+          <span class="w-9 h-9 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center">
+            <i class="fa-solid fa-wrench text-base"></i>
+          </span>
+        </div>
+        <div class="mt-3">
+          <div id="kpiMaint" class="text-2xl sm:text-3xl font-extrabold text-amber-500 tabular-nums">56.00 <span class="text-sm font-semibold text-slate-500">h</span></div>
+          <p id="kpiMaintPct" class="text-xs text-slate-500 mt-1">0.19% mantenimiento preventivo</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fila 2: SECCIÓN DE GRÁFICAS (Dona a la IZQUIERDA, Barras de Doble Eje Y a la DERECHA) -->
+    <section aria-label="Análisis Gráfico de Horas" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+
+      <!-- TARJETA IZQUIERDA (4 columnas de 12 -> ~33.3% ancho): Distribución de Horas Bombas (Gráfica de Dona) -->
+      <div class="lg:col-span-4 bg-white rounded-2xl p-6 border border-slate-200/90 card-shadow flex flex-col justify-between">
+        <div>
+          <!-- Título y Subtítulo -->
+          <h2 class="text-[19px] font-bold text-slate-900 leading-snug">
+            Distribución de Horas Bombas
+          </h2>
+          <p class="text-sm text-slate-500 mt-1 tabular-nums">
+            Total Calendario: <span id="donutTotalCalendarText" class="font-bold text-slate-800">29,614.13 h</span>
+          </p>
+
+          <!-- Leyenda Personalizada Idéntica a la Referencia -->
+          <div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs font-semibold text-slate-700">
+            <div class="flex items-center gap-1.5">
+              <span class="w-3.5 h-3.5 rounded-full inline-block shrink-0" style="background-color: #2ca02c;"></span>
+              <span>Operación Neta (h)</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-3.5 h-3.5 rounded-full inline-block shrink-0" style="background-color: #e6194b;"></span>
+              <span>Parada Falla (h)</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-3.5 h-3.5 rounded-full inline-block shrink-0" style="background-color: #f59e0b;"></span>
+              <span>Parada Mantto (h)</span>
+            </div>
+          </div>
+
+          <!-- Contenedor del Canvas Dona -->
+          <div class="relative w-full max-w-[235px] h-[235px] mx-auto my-5 flex items-center justify-center">
+            <canvas id="donutChart"></canvas>
+          </div>
+        </div>
+
+        <!-- 3 Tarjetas Inferiores de Resumen (Operación, H. Falla, H. Mantto) -->
+        <div class="pt-4 border-t border-slate-100 grid grid-cols-3 gap-2.5">
+          <!-- Tarjeta Verde Claro -->
+          <div class="rounded-xl px-3 py-2.5 bg-[#ebf7ee] border border-[#cdebd5]">
+            <div class="text-xs font-medium text-slate-500">Operación</div>
+            <div id="donutCardOp" class="text-[13px] xl:text-sm font-bold text-[#2ca02c] tabular-nums mt-0.5">
+              29,467.31 h
+            </div>
+          </div>
+
+          <!-- Tarjeta Roja Claro -->
+          <div class="rounded-xl px-3 py-2.5 bg-[#fdecee] border border-[#f9cfd5]">
+            <div class="text-xs font-medium text-slate-500">H. Falla</div>
+            <div id="donutCardFail" class="text-[13px] xl:text-sm font-bold text-[#e6194b] tabular-nums mt-0.5">
+              90.82 h
+            </div>
+          </div>
+
+          <!-- Tarjeta Naranja Claro -->
+          <div class="rounded-xl px-3 py-2.5 bg-[#fef5e7] border border-[#fce3be]">
+            <div class="text-xs font-medium text-slate-500">H. Mantto</div>
+            <div id="donutCardMaint" class="text-[13px] xl:text-sm font-bold text-[#e68a00] tabular-nums mt-0.5">
+              56.00 h
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TARJETA DERECHA (8 columnas de 12 -> ~66.7% ancho): Comparativo Horas Parada por Falla vs Paradas por Mantenimiento -->
+      <div class="lg:col-span-8 bg-white rounded-2xl p-6 border border-slate-200/90 card-shadow flex flex-col justify-between">
+        <!-- Encabezado con Título, Subtítulo y Badge Corte -->
+        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div>
+            <h2 class="text-[19px] font-bold text-slate-900 leading-snug">
+              Comparativo Horas Parada por Falla vs Paradas por Mantenimiento
+            </h2>
+            <p class="text-sm text-slate-500 mt-1">
+              Desglose de Horas de Operación Neta, Horas de Falla y Horas de Mantenimiento por bomba
+            </p>
+          </div>
+          <span class="inline-flex items-center self-start px-3.5 py-1.5 rounded-lg bg-slate-100 text-slate-600 text-xs font-semibold tabular-nums border border-slate-200/70 shrink-0">
+            Corte 31/10/2026
+          </span>
+        </div>
+
+        <!-- Leyenda Superior Centrada Idéntica a la Referencia -->
+        <div class="mt-5 mb-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs sm:text-[13px] font-semibold text-slate-700">
+          <div class="flex items-center gap-2">
+            <span class="w-3.5 h-3.5 rounded-full inline-block shrink-0" style="background-color: #2ca02c;"></span>
+            <span>Horas Operación Neta (h)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3.5 h-3.5 rounded-full inline-block shrink-0" style="background-color: #e6194b;"></span>
+            <span>Horas Parada por Falla (h)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3.5 h-3.5 rounded-full inline-block shrink-0" style="background-color: #f59e0b;"></span>
+            <span>Horas Parada Mantenimiento (h)</span>
+          </div>
+        </div>
+
+        <!-- Contenedor del Canvas Barras Agrupadas Doble Eje Y -->
+        <div class="relative w-full h-[330px] sm:h-[360px] mt-1">
+          <canvas id="barComparisonChart"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Fila 3: Tabla Detallada de Confiabilidad y Tiempos por Bomba -->
+    <section aria-label="Detalle Operativo por Equipo" class="bg-white rounded-2xl border border-slate-200/90 card-shadow overflow-hidden">
+      <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h3 class="text-lg font-bold text-slate-900">Desglose Técnico por Unidad de Bombeo</h3>
+          <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+            Indicadores de disponibilidad, horas acumuladas y eventos registrados — Vulcan Energy Technology Venezolana
+          </p>
+        </div>
+        <div class="relative w-full sm:w-64">
+          <i class="fa-solid fa-magnifying-glass text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 text-xs"></i>
+          <input id="searchInput" type="text" placeholder="Buscar equipo o código..." class="w-full pl-9 pr-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition">
+        </div>
+      </div>
+
+      <div class="overflow-x-auto custom-scrollbar">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-50/90 border-b border-slate-200/80 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              <th class="py-3.5 px-5">Equipo / Tag</th>
+              <th class="py-3.5 px-4">Sistema / Tipo</th>
+              <th class="py-3.5 px-4 text-right">Horas Calendario (h)</th>
+              <th class="py-3.5 px-4 text-right">Operación Neta (h)</th>
+              <th class="py-3.5 px-4 text-right">Parada Falla (h)</th>
+              <th class="py-3.5 px-4 text-right">Parada Mantto (h)</th>
+              <th class="py-3.5 px-4 text-right">Disponibilidad (%)</th>
+              <th class="py-3.5 px-5 text-center">Estado Operativo</th>
+            </tr>
+          </thead>
+          <tbody id="equipmentTableBody" class="divide-y divide-slate-100 text-sm">
+            <!-- Filas generadas dinámicamente -->
+          </tbody>
+          <tfoot id="equipmentTableFoot" class="bg-slate-50 font-bold text-slate-900 border-t-2 border-slate-200 text-sm">
+            <!-- Totales generados dinámicamente -->
+          </tfoot>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Pie de Página -->
+  <footer class="bg-white border-t border-slate-200 mt-8">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+      <div class="font-semibold text-slate-700">
+        &copy; 2026 Vulcan Energy Technology Venezolana — Todos los derechos reservados.
+      </div>
+      <div>
+        Gerencia de Ingeniería de Confiabilidad y Mantenimiento &bull; Corte Oficial: 31/10/2026
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lógica de Datos y Visualizaciones -->
+  <script>
+    // Dataset exacto calibrado con los valores de la imagen de referencia:
+    // Suma Operación Neta = 29,467.31 h
+    // Suma Parada Falla = 90.82 h (MPP #1 = 65.30 h, MPP #2 = 25.52 h)
+    // Suma Parada Mantto = 56.00 h (Recip #1 = 10.00 h, Recip #2 = 13.00 h, Recip #3 = 10.00 h, Recip #4 = 13.00 h, Circular #1 = 10.00 h -> ajustado visualmente 10, 13, 10, 13, 8 = 54 o 11, 13, 11, 13, 8 = 56.00 h)
+    // Total Calendario = 29,614.13 h
+    const pumpDataset = [
+      {
+        id: 'MPP #1',
+        tag: 'P-101A',
+        category: 'MPP',
+        typeLabel: 'Bomba Multifásica (MPP)',
+        netOpHours: 1620.45,
+        failureHours: 65.30,
+        maintHours: 0.00,
+        status: 'Operativa con Seguimiento'
+      },
+      {
+        id: 'MPP #2',
+        tag: 'P-101B',
+        category: 'MPP',
+        typeLabel: 'Bomba Multifásica (MPP)',
+        netOpHours: 3045.86,
+        failureHours: 25.52,
+        maintHours: 0.00,
+        status: 'Operativa'
+      },
+      {
+        id: 'Recip. #1',
+        tag: 'P-201A',
+        category: 'Recip',
+        typeLabel: 'Bomba Reciprocante',
+        netOpHours: 4990.00,
+        failureHours: 0.00,
+        maintHours: 10.50,
+        status: 'Óptima'
+      },
+      {
+        id: 'Recip. #2',
+        tag: 'P-201B',
+        category: 'Recip',
+        typeLabel: 'Bomba Reciprocante',
+        netOpHours: 5850.00,
+        failureHours: 0.00,
+        maintHours: 13.50,
+        status: 'Óptima'
+      },
+      {
+        id: 'Recip. #3',
+        tag: 'P-201C',
+        category: 'Recip',
+        typeLabel: 'Bomba Reciprocante',
+        netOpHours: 4990.00,
+        failureHours: 0.00,
+        maintHours: 10.50,
+        status: 'Óptima'
+      },
+      {
+        id: 'Recip. #4',
+        tag: 'P-201D',
+        category: 'Recip',
+        typeLabel: 'Bomba Reciprocante',
+        netOpHours: 5850.00,
+        failureHours: 0.00,
+        maintHours: 13.50,
+        status: 'Óptima'
+      },
+      {
+        id: 'Circular #1',
+        tag: 'P-301',
+        category: 'Circular',
+        typeLabel: 'Bomba de Circulación',
+        netOpHours: 3121.00,
+        failureHours: 0.00,
+        maintHours: 8.00,
+        status: 'Óptima'
+      }
+    ];
+
+    // Formateador numérico con coma de miles y 2 decimales
+    function formatNumber(num) {
+      return num.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    let donutChartInstance = null;
+    let barChartInstance = null;
+
+    // Función para mostrar notificación temporal
+    function showToast(msg) {
+      const banner = document.getElementById('toastBanner');
+      const text = document.getElementById('toastMessage');
+      text.textContent = msg;
+      banner.classList.remove('hidden');
+      setTimeout(() => {
+        banner.classList.add('hidden');
+      }, 3200);
+    }
+
+    // Obtener datos filtrados actuales
+    function getFilteredData() {
+      const typeFilter = document.getElementById('pumpTypeFilter').value;
+      const searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+
+      return pumpDataset.filter(item => {
+        const matchesType = typeFilter === 'ALL' || item.category === typeFilter;
+        const matchesSearch =
+          item.id.toLowerCase().includes(searchQuery) ||
+          item.tag.toLowerCase().includes(searchQuery) ||
+          item.typeLabel.toLowerCase().includes(searchQuery);
+        return matchesType && matchesSearch;
+      });
+    }
+
+    // Actualizar KPIs, Tarjetas de Resumen, Gráficas y Tabla
+    function updateDashboard() {
+      const filtered = getFilteredData();
+
+      let totalNetOp = 0;
+      let totalFail = 0;
+      let totalMaint = 0;
+
+      filtered.forEach(p => {
+        totalNetOp += p.netOpHours;
+        totalFail += p.failureHours;
+        totalMaint += p.maintHours;
+      });
+
+      const totalCalendar = totalNetOp + totalFail + totalMaint;
+      const availability = totalCalendar > 0 ? (totalNetOp / totalCalendar) * 100 : 0;
+      const failPct = totalCalendar > 0 ? (totalFail / totalCalendar) * 100 : 0;
+      const maintPct = totalCalendar > 0 ? (totalMaint / totalCalendar) * 100 : 0;
+
+      // Actualizar KPIs superiores
+      document.getElementById('kpiAvailability').textContent = `${availability.toFixed(2)}%`;
+      document.getElementById('kpiTotalCalendar').innerHTML = `${formatNumber(totalCalendar)} <span class="text-sm font-semibold text-slate-500">h</span>`;
+      document.getElementById('kpiEquipCount').textContent = `Acumulado en ${filtered.length} ${filtered.length === 1 ? 'unidad activa' : 'unidades activas'}`;
+      document.getElementById('kpiNetOp').innerHTML = `${formatNumber(totalNetOp)} <span class="text-sm font-semibold text-slate-500">h</span>`;
+      document.getElementById('kpiNetOpPct').textContent = `${availability.toFixed(2)}% del tiempo calendario`;
+      document.getElementById('kpiFailure').innerHTML = `${formatNumber(totalFail)} <span class="text-sm font-semibold text-slate-500">h</span>`;
+      document.getElementById('kpiFailurePct').textContent = `${failPct.toFixed(2)}% indisponibilidad no planificada`;
+      document.getElementById('kpiMaint').innerHTML = `${formatNumber(totalMaint)} <span class="text-sm font-semibold text-slate-500">h</span>`;
+      document.getElementById('kpiMaintPct').textContent = `${maintPct.toFixed(2)}% mantenimiento preventivo`;
+
+      // Actualizar textos de la tarjeta izquierda (Dona)
+      document.getElementById('donutTotalCalendarText').textContent = `${formatNumber(totalCalendar)} h`;
+      document.getElementById('donutCardOp').textContent = `${formatNumber(totalNetOp)} h`;
+      document.getElementById('donutCardFail').textContent = `${formatNumber(totalFail)} h`;
+      document.getElementById('donutCardMaint').textContent = `${formatNumber(totalMaint)} h`;
+
+      renderDonutChart(totalNetOp, totalFail, totalMaint);
+      renderBarComparisonChart(filtered);
+      renderTable(filtered, totalCalendar, totalNetOp, totalFail, totalMaint, availability);
+    }
+
+    // Gráfica 1 (IZQUIERDA): Dona de Distribución de Horas Bombas
+    function renderDonutChart(netOp, fail, maint) {
+      const ctx = document.getElementById('donutChart').getContext('2d');
+
+      if (donutChartInstance) {
+        donutChartInstance.destroy();
+      }
+
+      donutChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Operación Neta (h)', 'Parada Falla (h)', 'Parada Mantto (h)'],
+          datasets: [{
+            data: [netOp, fail, maint],
+            backgroundColor: ['#2ca02c', '#e6194b', '#f59e0b'],
+            hoverBackgroundColor: ['#238523', '#c81440', '#d97706'],
+            borderWidth: 0,
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          cutout: '58%',
+          rotation: -3, // Mantiene las pequeñas franjas de falla/mantto visibles arriba igual que en la referencia
+          plugins: {
+            legend: {
+              display: false // Usamos la leyenda personalizada idéntica a la imagen
+            },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              titleFont: { family: 'Inter', size: 12, weight: '700' },
+              bodyFont: { family: 'Inter', size: 12 },
+              padding: 10,
+              cornerRadius: 8,
+              callbacks: {
+                label: function(context) {
+                  const val = context.parsed || 0;
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const pct = total > 0 ? ((val / total) * 100).toFixed(2) : '0.00';
+                  return ` ${context.label}: ${formatNumber(val)} h (${pct}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Gráfica 2 (DERECHA): Barras Agrupadas con Doble Eje Y
+    function renderBarComparisonChart(data) {
+      const ctx = document.getElementById('barComparisonChart').getContext('2d');
+
+      if (barChartInstance) {
+        barChartInstance.destroy();
+      }
+
+      const labels = data.map(d => d.id);
+      const netOpValues = data.map(d => d.netOpHours);
+      const failureValues = data.map(d => d.failureHours);
+      const maintValues = data.map(d => d.maintHours);
+
+      barChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Horas Operación Neta (h)',
+              data: netOpValues,
+              backgroundColor: '#2ca02c',
+              hoverBackgroundColor: '#248824',
+              yAxisID: 'yLeft',
+              borderRadius: { topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0 },
+              borderSkipped: 'bottom',
+              barPercentage: 0.78,
+              categoryPercentage: 0.76
+            },
+            {
+              label: 'Horas Parada por Falla (h)',
+              data: failureValues,
+              backgroundColor: '#e6194b',
+              hoverBackgroundColor: '#c91440',
+              yAxisID: 'yRight',
+              borderRadius: { topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0 },
+              borderSkipped: 'bottom',
+              barPercentage: 0.78,
+              categoryPercentage: 0.76
+            },
+            {
+              label: 'Horas Parada Mantenimiento (h)',
+              data: maintValues,
+              backgroundColor: '#f59e0b',
+              hoverBackgroundColor: '#d97706',
+              yAxisID: 'yRight',
+              borderRadius: { topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0 },
+              borderSkipped: 'bottom',
+              barPercentage: 0.78,
+              categoryPercentage: 0.76
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false
+          },
+          plugins: {
+            legend: {
+              display: false // Usamos la leyenda personalizada idéntica a la imagen
+            },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              titleFont: { family: 'Inter', size: 13, weight: '700' },
+              bodyFont: { family: 'Inter', size: 12 },
+              padding: 12,
+              cornerRadius: 10,
+              callbacks: {
+                label: function(context) {
+                  const val = context.parsed.y || 0;
+                  return ` ${context.dataset.label}: ${formatNumber(val)} h`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                display: true,
+                color: '#e5e7eb',
+                drawTicks: false
+              },
+              border: {
+                color: '#cbd5e1'
+              },
+              ticks: {
+                color: '#64748b',
+                font: {
+                  family: 'Inter',
+                  size: 12,
+                  weight: '500'
+                },
+                padding: 8
+              }
+            },
+            yLeft: {
+              type: 'linear',
+              position: 'left',
+              min: 0,
+              max: 6000,
+              ticks: {
+                stepSize: 1000,
+                color: '#64748b',
+                font: {
+                  family: 'Inter',
+                  size: 12
+                },
+                padding: 8,
+                callback: function(value) {
+                  return value.toLocaleString('en-US');
+                }
+              },
+              title: {
+                display: true,
+                text: 'Horas Operación Neta (h)',
+                color: '#2ca02c',
+                font: {
+                  family: 'Inter',
+                  size: 12,
+                  weight: '700'
+                },
+                padding: { bottom: 6 }
+              },
+              grid: {
+                color: '#e5e7eb',
+                drawTicks: true
+              },
+              border: {
+                color: '#cbd5e1'
+              }
+            },
+            yRight: {
+              type: 'linear',
+              position: 'right',
+              min: 0,
+              max: 70,
+              ticks: {
+                stepSize: 10,
+                color: '#64748b',
+                font: {
+                  family: 'Inter',
+                  size: 12
+                },
+                padding: 8
+              },
+              title: {
+                display: true,
+                text: 'Horas de Parada (h)',
+                color: '#e6194b',
+                font: {
+                  family: 'Inter',
+                  size: 12,
+                  weight: '700'
+                },
+                padding: { bottom: 6 }
+              },
+              grid: {
+                drawOnChartArea: false // Evita duplicar líneas horizontales y mantiene la cuadrícula limpia
+              },
+              border: {
+                color: '#cbd5e1'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Renderizado de Tabla Detallada
+    function renderTable(data, totalCal, totalOp, totalFail, totalMaint, totalAvail) {
+      const tbody = document.getElementById('equipmentTableBody');
+      const tfoot = document.getElementById('equipmentTableFoot');
+
+      if (data.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="py-8 text-center text-slate-500">
+              No se encontraron equipos que coincidan con el filtro aplicado.
+            </td>
+          </tr>
+        `;
+        tfoot.innerHTML = '';
+        return;
+      }
+
+      tbody.innerHTML = data.map(row => {
+        const rowCal = row.netOpHours + row.failureHours + row.maintHours;
+        const rowAvail = rowCal > 0 ? (row.netOpHours / rowCal) * 100 : 0;
+
+        const statusBadge = row.failureHours > 0
+          ? `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+               <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>${row.status}
+             </span>`
+          : `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>${row.status}
+             </span>`;
+
+        return `
+          <tr class="hover:bg-slate-50/80 transition">
+            <td class="py-3.5 px-5 font-bold text-slate-900">
+              ${row.id} <span class="ml-1.5 text-xs font-medium text-slate-400">(${row.tag})</span>
+            </td>
+            <td class="py-3.5 px-4 text-slate-600">${row.typeLabel}</td>
+            <td class="py-3.5 px-4 text-right tabular-nums font-medium text-slate-700">${formatNumber(rowCal)}</td>
+            <td class="py-3.5 px-4 text-right tabular-nums font-semibold text-[#2ca02c]">${formatNumber(row.netOpHours)}</td>
+            <td class="py-3.5 px-4 text-right tabular-nums font-semibold ${row.failureHours > 0 ? 'text-[#e6194b]' : 'text-slate-400'}">${formatNumber(row.failureHours)}</td>
+            <td class="py-3.5 px-4 text-right tabular-nums font-semibold ${row.maintHours > 0 ? 'text-[#e68a00]' : 'text-slate-400'}">${formatNumber(row.maintHours)}</td>
+            <td class="py-3.5 px-4 text-right tabular-nums font-bold text-slate-900">${rowAvail.toFixed(2)}%</td>
+            <td class="py-3.5 px-5 text-center">${statusBadge}</td>
+          </tr>
+        `;
+      }).join('');
+
+      tfoot.innerHTML = `
+        <tr>
+          <td class="py-3.5 px-5" colspan="2">Total Consolidado (${data.length} Equipos)</td>
+          <td class="py-3.5 px-4 text-right tabular-nums">${formatNumber(totalCal)}</td>
+          <td class="py-3.5 px-4 text-right tabular-nums text-[#2ca02c]">${formatNumber(totalOp)}</td>
+          <td class="py-3.5 px-4 text-right tabular-nums text-[#e6194b]">${formatNumber(totalFail)}</td>
+          <td class="py-3.5 px-4 text-right tabular-nums text-[#e68a00]">${formatNumber(totalMaint)}</td>
+          <td class="py-3.5 px-4 text-right tabular-nums">${totalAvail.toFixed(2)}%</td>
+          <td class="py-3.5 px-5 text-center text-xs font-semibold text-emerald-700">Corte 31/10/2026</td>
+        </tr>
+      `;
+    }
+
+    // Exportar datos a CSV
+    function exportToCSV() {
+      const data = getFilteredData();
+      const headers = ['Equipo', 'Tag', 'Tipo', 'Horas Calendario (h)', 'Operacion Neta (h)', 'Parada Falla (h)', 'Parada Mantenimiento (h)', 'Disponibilidad (%)'];
+      const rows = data.map(r => {
+        const cal = r.netOpHours + r.failureHours + r.maintHours;
+        const avail = cal > 0 ? ((r.netOpHours / cal) * 100).toFixed(2) : '0.00';
+        return [
+          `"${r.id}"`,
+          `"${r.tag}"`,
+          `"${r.typeLabel}"`,
+          cal.toFixed(2),
+          r.netOpHours.toFixed(2),
+          r.failureHours.toFixed(2),
+          r.maintHours.toFixed(2),
+          avail
+        ].join(',');
+      });
+
+      const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'Vulcan_Energy_Technology_Venezolana_Bombeo_31_10_2026.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast('Archivo CSV descargado para Vulcan Energy Technology Venezolana.');
+    }
+
+    // Listeners de eventos
+    document.getElementById('pumpTypeFilter').addEventListener('change', updateDashboard);
+    document.getElementById('searchInput').addEventListener('input', updateDashboard);
+    document.getElementById('exportCsvBtn').addEventListener('click', exportToCSV);
+
+    // Inicialización al cargar la página
+    window.addEventListener('DOMContentLoaded', () => {
+      updateDashboard();
+    });
+  </script>
+</body>
+</html>
