@@ -1,6 +1,6 @@
 {
   "cutoffIso": "2026-11-13T14:48",
-  "lastUpdated": "2026-11-13T19:11:27.619Z",
+  "lastUpdated": "2026-11-13T19:19:01.697Z",
   "events": [
     {
       "id": 1794597086786,
@@ -698,23 +698,6 @@
       "description": "Protección por alta temperatura a la bomba 2 (Alta temperatura de la bomba)",
       "duration": 1,
       "hmFormat": "1 h 00 min"
-    },
-    {
-      "id": 1794597086828,
-      "area": "Cariña Norte",
-      "equipment": "MPP #1",
-      "eventType": "FALLA",
-      "maintenanceType": null,
-      "eventNum": 4,
-      "startDateTime": "2026-11-07T18:45",
-      "endDateTime": "2026-11-07T20:41",
-      "date": "2026-11-07",
-      "displayRange": "07/11/2026 18:45 — 07/11/2026 20:41",
-      "monthKey": "2026-11",
-      "system": "Facilidades",
-      "description": "Fuga en brida",
-      "duration": 1.93,
-      "hmFormat": "1 h 56 min"
     }
   ]
 }
