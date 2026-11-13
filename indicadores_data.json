@@ -1,6 +1,6 @@
 {
   "cutoffIso": "2026-11-13T14:48",
-  "lastUpdated": "2026-11-13T19:08:43.390Z",
+  "lastUpdated": "2026-11-13T19:09:13.754Z",
   "events": [
     {
       "id": 1794595645907,
@@ -715,23 +715,6 @@
       "description": "Fuga en brida",
       "duration": 1.93,
       "hmFormat": "1 h 56 min"
-    },
-    {
-      "id": 1794596922608,
-      "area": "Cariña Norte",
-      "equipment": "MPP #1",
-      "eventType": "MANTENIMIENTO",
-      "maintenanceType": "PREVENTIVO",
-      "eventNum": 1,
-      "startDateTime": "2026-11-11T11:36",
-      "endDateTime": "2026-11-11T14:08",
-      "date": "2026-11-11",
-      "displayRange": "11/11/2026 11:36 — 11/11/2026 14:08",
-      "monthKey": "2026-11",
-      "system": "Mantenimiento Preventivo General",
-      "description": "Mantenimiento Predictivo",
-      "duration": 2.53,
-      "hmFormat": "2 h 32 min"
     }
   ]
 }
