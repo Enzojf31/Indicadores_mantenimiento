@@ -1,9 +1,9 @@
 {
   "cutoffIso": "2026-11-13T14:48",
-  "lastUpdated": "2026-11-13T19:09:18.852Z",
+  "lastUpdated": "2026-11-13T19:11:27.619Z",
   "events": [
     {
-      "id": 1794595645907,
+      "id": 1794597086786,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #1",
       "eventType": "MANTENIMIENTO",
@@ -20,7 +20,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645908,
+      "id": 1794597086788,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #2",
       "eventType": "MANTENIMIENTO",
@@ -37,7 +37,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645909,
+      "id": 1794597086789,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #3",
       "eventType": "MANTENIMIENTO",
@@ -54,7 +54,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645910,
+      "id": 1794597086790,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #4",
       "eventType": "MANTENIMIENTO",
@@ -71,7 +71,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645911,
+      "id": 1794597086791,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #1",
       "eventType": "MANTENIMIENTO",
@@ -88,7 +88,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645912,
+      "id": 1794597086792,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #2",
       "eventType": "MANTENIMIENTO",
@@ -105,7 +105,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645913,
+      "id": 1794597086793,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #3",
       "eventType": "MANTENIMIENTO",
@@ -122,7 +122,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645914,
+      "id": 1794597086794,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #4",
       "eventType": "MANTENIMIENTO",
@@ -139,7 +139,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645915,
+      "id": 1794597086795,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #1",
       "eventType": "MANTENIMIENTO",
@@ -156,7 +156,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645916,
+      "id": 1794597086796,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #2",
       "eventType": "MANTENIMIENTO",
@@ -173,7 +173,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645917,
+      "id": 1794597086797,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #3",
       "eventType": "MANTENIMIENTO",
@@ -190,7 +190,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645918,
+      "id": 1794597086798,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #4",
       "eventType": "MANTENIMIENTO",
@@ -207,7 +207,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645919,
+      "id": 1794597086799,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #1",
       "eventType": "MANTENIMIENTO",
@@ -224,7 +224,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645920,
+      "id": 1794597086800,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #2",
       "eventType": "MANTENIMIENTO",
@@ -241,7 +241,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645921,
+      "id": 1794597086801,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #3",
       "eventType": "MANTENIMIENTO",
@@ -258,7 +258,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645922,
+      "id": 1794597086802,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #4",
       "eventType": "MANTENIMIENTO",
@@ -275,7 +275,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645923,
+      "id": 1794597086803,
       "area": "Cariña Norte",
       "equipment": "MPP #2",
       "eventType": "FALLA",
@@ -292,7 +292,7 @@
       "hmFormat": "3 h 30 min"
     },
     {
-      "id": 1794595645924,
+      "id": 1794597086804,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #1",
       "eventType": "MANTENIMIENTO",
@@ -309,7 +309,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645925,
+      "id": 1794597086805,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #2",
       "eventType": "MANTENIMIENTO",
@@ -326,7 +326,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645926,
+      "id": 1794597086806,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #3",
       "eventType": "MANTENIMIENTO",
@@ -343,7 +343,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645927,
+      "id": 1794597086807,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #4",
       "eventType": "MANTENIMIENTO",
@@ -360,7 +360,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645928,
+      "id": 1794597086808,
       "area": "Bared-10",
       "equipment": "Bomba Circular #1",
       "eventType": "MANTENIMIENTO",
@@ -377,7 +377,7 @@
       "hmFormat": "2 h 00 min"
     },
     {
-      "id": 1794595645929,
+      "id": 1794597086809,
       "area": "Cariña Norte",
       "equipment": "MPP #2",
       "eventType": "FALLA",
@@ -394,7 +394,7 @@
       "hmFormat": "6 h 00 min"
     },
     {
-      "id": 1794595645930,
+      "id": 1794597086810,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #1",
       "eventType": "MANTENIMIENTO",
@@ -411,7 +411,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645931,
+      "id": 1794597086811,
       "area": "Bared-10",
       "equipment": "Bomba Circular #1",
       "eventType": "MANTENIMIENTO",
@@ -428,7 +428,7 @@
       "hmFormat": "2 h 00 min"
     },
     {
-      "id": 1794595645932,
+      "id": 1794597086812,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #2",
       "eventType": "MANTENIMIENTO",
@@ -445,7 +445,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645933,
+      "id": 1794597086813,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #3",
       "eventType": "MANTENIMIENTO",
@@ -462,7 +462,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645934,
+      "id": 1794597086814,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #4",
       "eventType": "MANTENIMIENTO",
@@ -479,7 +479,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645935,
+      "id": 1794597086815,
       "area": "Cariña Norte",
       "equipment": "MPP #1",
       "eventType": "FALLA",
@@ -496,7 +496,7 @@
       "hmFormat": "59 h 39 min"
     },
     {
-      "id": 1794595645936,
+      "id": 1794597086816,
       "area": "Cariña Norte",
       "equipment": "MPP #2",
       "eventType": "FALLA",
@@ -513,7 +513,7 @@
       "hmFormat": "15 h 00 min"
     },
     {
-      "id": 1794595645937,
+      "id": 1794597086817,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #1",
       "eventType": "MANTENIMIENTO",
@@ -530,7 +530,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645938,
+      "id": 1794597086818,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #2",
       "eventType": "MANTENIMIENTO",
@@ -547,7 +547,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645939,
+      "id": 1794597086819,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #3",
       "eventType": "MANTENIMIENTO",
@@ -564,7 +564,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645940,
+      "id": 1794597086820,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #4",
       "eventType": "MANTENIMIENTO",
@@ -581,7 +581,7 @@
       "hmFormat": "1 h 30 min"
     },
     {
-      "id": 1794595645941,
+      "id": 1794597086821,
       "area": "Bared-10",
       "equipment": "Bomba Circular #1",
       "eventType": "MANTENIMIENTO",
@@ -598,7 +598,7 @@
       "hmFormat": "2 h 00 min"
     },
     {
-      "id": 1794595645942,
+      "id": 1794597086822,
       "area": "Cariña Norte",
       "equipment": "MPP #1",
       "eventType": "FALLA",
@@ -615,7 +615,7 @@
       "hmFormat": "5 h 40 min"
     },
     {
-      "id": 1794595645943,
+      "id": 1794597086823,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #2",
       "eventType": "MANTENIMIENTO",
@@ -632,7 +632,7 @@
       "hmFormat": "3 h 00 min"
     },
     {
-      "id": 1794595645944,
+      "id": 1794597086824,
       "area": "Cariña Sur",
       "equipment": "Reciprocante #4",
       "eventType": "MANTENIMIENTO",
@@ -649,7 +649,7 @@
       "hmFormat": "3 h 00 min"
     },
     {
-      "id": 1794595645945,
+      "id": 1794597086825,
       "area": "Bared-10",
       "equipment": "Bomba Circular #1",
       "eventType": "MANTENIMIENTO",
@@ -666,7 +666,7 @@
       "hmFormat": "2 h 00 min"
     },
     {
-      "id": 1794595645946,
+      "id": 1794597086826,
       "area": "Cariña Norte",
       "equipment": "MPP #1",
       "eventType": "FALLA",
@@ -683,7 +683,7 @@
       "hmFormat": "0 h 30 min"
     },
     {
-      "id": 1794595645947,
+      "id": 1794597086827,
       "area": "Cariña Norte",
       "equipment": "MPP #2",
       "eventType": "FALLA",
@@ -698,6 +698,23 @@
       "description": "Protección por alta temperatura a la bomba 2 (Alta temperatura de la bomba)",
       "duration": 1,
       "hmFormat": "1 h 00 min"
+    },
+    {
+      "id": 1794597086828,
+      "area": "Cariña Norte",
+      "equipment": "MPP #1",
+      "eventType": "FALLA",
+      "maintenanceType": null,
+      "eventNum": 4,
+      "startDateTime": "2026-11-07T18:45",
+      "endDateTime": "2026-11-07T20:41",
+      "date": "2026-11-07",
+      "displayRange": "07/11/2026 18:45 — 07/11/2026 20:41",
+      "monthKey": "2026-11",
+      "system": "Facilidades",
+      "description": "Fuga en brida",
+      "duration": 1.93,
+      "hmFormat": "1 h 56 min"
     }
   ]
 }
